@@ -43,6 +43,9 @@
 // 16=right ctrl, 32=right shift, 64=right alt, 128=right gui
 uint8_t keyboard_modifier_keys=0;
 
+// which media keys are currently pressed
+uint8_t keyboard_media_keys=0;
+
 // which keys are currently pressed, up to 6 keys may be down at once
 uint8_t keyboard_keys[6]={0,0,0,0,0,0};
 
@@ -468,7 +471,7 @@ int usb_keyboard_send(void)
 		yield();
 	}
 	*(tx_packet->buf) = keyboard_modifier_keys;
-	*(tx_packet->buf + 1) = 0;
+	*(tx_packet->buf + 1) = keyboard_media_keys;
 	memcpy(tx_packet->buf + 2, keyboard_keys, 6);
 	tx_packet->len = 8;
 	usb_tx(KEYBOARD_ENDPOINT, tx_packet);
