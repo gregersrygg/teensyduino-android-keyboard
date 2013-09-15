@@ -977,6 +977,18 @@ public:
 		}
 		return ret;
 	}
+	inline void setMOSI(uint8_t pin) __attribute__((always_inline)) {
+		if (pin == 11) pinout &= ~1;
+		if (pin == 7) pinout |= 1;
+	}
+	inline void setMISO(uint8_t pin) __attribute__((always_inline)) {
+		if (pin == 12) pinout &= ~2;
+		if (pin == 8) pinout |= 2;
+	}
+	inline void setSCK(uint8_t pin) __attribute__((always_inline)) {
+		if (pin == 13) pinout &= ~4;
+		if (pin == 14) pinout |= 4;
+	}
 	friend class SPSRemulation;
 private:
 	static inline void update_ctar(uint32_t ctar) __attribute__((always_inline)) {
@@ -990,11 +1002,24 @@ private:
 			SPI0_MCR = mcr;
 		}
 	}
+	static uint8_t pinout;
 	inline void enable_pins(void) __attribute__((always_inline)) {
 		//serial_print("enable_pins\n");
-		CORE_PIN11_CONFIG = PORT_PCR_DSE | PORT_PCR_MUX(2);
-		CORE_PIN12_CONFIG = PORT_PCR_MUX(2);
-		CORE_PIN13_CONFIG = PORT_PCR_DSE | PORT_PCR_MUX(2);
+		if ((pinout & 1) == 0) {
+			CORE_PIN11_CONFIG = PORT_PCR_DSE | PORT_PCR_MUX(2); // DOUT/MOSI = 11 (PTC6)
+		} else {
+			CORE_PIN7_CONFIG = PORT_PCR_MUX(2); // DOUT/MOSI = 7 (PTD2)
+		}
+		if ((pinout & 2) == 0) {
+			CORE_PIN12_CONFIG = PORT_PCR_MUX(2);  // DIN/MISO = 12 (PTC7)
+		} else {
+			CORE_PIN8_CONFIG = PORT_PCR_MUX(2);  // DIN/MISO = 8 (PTD3)
+		}
+		if ((pinout & 4) == 0) {
+			CORE_PIN13_CONFIG = PORT_PCR_DSE | PORT_PCR_MUX(2); // SCK = 13 (PTC5)
+		} else {
+			CORE_PIN14_CONFIG = PORT_PCR_MUX(2); // SCK = 14 (PTD1)
+		}
 	}
 	inline void disable_pins(void) __attribute__((always_inline)) {
 		//serial_print("disable_pins\n");
