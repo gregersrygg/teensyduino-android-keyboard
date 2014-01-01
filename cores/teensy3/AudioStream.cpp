@@ -174,8 +174,6 @@ void AudioConnection::connect(void)
 // their constructors.
 bool AudioStream::update_scheduled = false;
 
-#define NVIC_SET_PRIORITY(n, p)  (*((volatile uint8_t *)0xE000E400 + n) = p)
-
 bool AudioStream::update_setup(void)
 {
 	if (update_scheduled) return false;

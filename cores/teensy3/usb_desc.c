@@ -172,12 +172,15 @@ static uint8_t mouse_report_desc[] = {
         0x05, 0x01,                     //   Usage Page (Generic Desktop)
         0x09, 0x30,                     //   Usage (X)
         0x09, 0x31,                     //   Usage (Y)
+        0x15, 0x00,                     //   Logical Minimum (0)
+        0x26, 0xFF, 0x7F,               //   Logical Maximum (32767)
+        0x75, 0x10,                     //   Report Size (16),
+        0x95, 0x02,                     //   Report Count (2),
+        0x81, 0x02,                     //   Input (Data, Variable, Absolute)
+        0x09, 0x38,                     //   Usage (Wheel)
         0x15, 0x81,                     //   Logical Minimum (-127)
         0x25, 0x7F,                     //   Logical Maximum (127)
         0x75, 0x08,                     //   Report Size (8),
-        0x95, 0x02,                     //   Report Count (2),
-        0x81, 0x06,                     //   Input (Data, Variable, Relative)
-        0x09, 0x38,                     //   Usage (Wheel)
         0x95, 0x01,                     //   Report Count (1),
         0x81, 0x06,                     //   Input (Data, Variable, Relative)
         0xC0                            // End Collection
@@ -506,8 +509,8 @@ static uint8_t config_descriptor[CONFIG_DESC_SIZE] = {
         0,                                      // bAlternateSetting
         1,                                      // bNumEndpoints
         0x03,                                   // bInterfaceClass (0x03 = HID)
-        0x01,                                   // bInterfaceSubClass (0x01 = Boot)
-        0x02,                                   // bInterfaceProtocol (0x02 = Mouse)
+        0x00,                                   // bInterfaceSubClass (0x01 = Boot)
+        0x00,                                   // bInterfaceProtocol (0x02 = Mouse)
         0,                                      // iInterface
         // HID interface descriptor, HID 1.11 spec, section 6.2.1
         9,                                      // bLength

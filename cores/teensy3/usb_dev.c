@@ -170,7 +170,7 @@ static void usb_setup(void)
 		reg = &USB0_ENDPT1;
 		cfg = usb_endpoint_config_table;
 		// clear all BDT entries, free any allocated memory...
-		for (i=4; i <= NUM_ENDPOINTS*4; i++) {
+		for (i=4; i < (NUM_ENDPOINTS+1)*4; i++) {
 			if (table[i].desc & BDT_OWN) {
 				usb_free((usb_packet_t *)((uint8_t *)(table[i].addr) - 8));
 			}
@@ -577,9 +577,8 @@ uint32_t usb_tx_packet_count(uint32_t endpoint)
 
 	endpoint--;
 	if (endpoint >= NUM_ENDPOINTS) return 0;
-	p = tx_first[endpoint];
 	__disable_irq();
-	for ( ; p; p = p->next) count++;
+	for (p = tx_first[endpoint]; p; p = p->next) count++;
 	__enable_irq();
 	return count;
 }
@@ -958,6 +957,7 @@ void usb_init(void)
 	USB0_INTEN = USB_INTEN_USBRSTEN;
 
 	// enable interrupt in NVIC...
+	NVIC_SET_PRIORITY(IRQ_USBOTG, 112);
 	NVIC_ENABLE_IRQ(IRQ_USBOTG);
 
 	// enable d+ pullup

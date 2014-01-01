@@ -41,8 +41,9 @@ extern "C" {
 #endif
 int usb_mouse_buttons(uint8_t left, uint8_t middle, uint8_t right);
 int usb_mouse_move(int8_t x, int8_t y, int8_t wheel);
+int usb_mouse_position(uint16_t x, uint16_t y);
+void usb_mouse_screen_size(uint16_t width, uint16_t height, uint8_t mac);
 extern uint8_t usb_mouse_buttons_state;
-extern uint8_t usb_mouse_protocol;
 #ifdef __cplusplus
 }
 #endif
@@ -61,6 +62,10 @@ class usb_mouse_class
         void begin(void) { }
         void end(void) { }
         void move(int8_t x, int8_t y, int8_t wheel=0) { usb_mouse_move(x, y, wheel); }
+	void moveTo(uint16_t x, uint16_t y) { usb_mouse_position(x, y); }
+	void screenSize(uint16_t width, uint16_t height, bool isMacintosh = false) {
+		usb_mouse_screen_size(width, height, isMacintosh ? 1 : 0);
+	}
         void click(uint8_t b = MOUSE_LEFT) {
 		usb_mouse_buttons_state = b;
 		usb_mouse_move(0, 0, 0);
@@ -95,4 +100,3 @@ extern usb_mouse_class Mouse;
 
 #endif // USB_HID || USB_SERIAL_HID
 #endif // USBmouse_h_
-
